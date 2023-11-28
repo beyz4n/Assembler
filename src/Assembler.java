@@ -9,7 +9,7 @@ public class Assembler {
         imm = getBinary(imm);
         instructionInBinary += src1;
         instructionInBinary += imm;
-        return instructionInBinary;
+        return binary2Hex(instructionInBinary);
     }
 
     public static String nand(String dest, String src1, String src2){
@@ -21,7 +21,7 @@ public class Assembler {
         instructionInBinary += src1;
         instructionInBinary += src2;
         instructionInBinary += "00";
-        return instructionInBinary;
+        return binary2Hex(instructionInBinary);
     }
 
     public static String ld(String dest, String addr){
@@ -30,7 +30,7 @@ public class Assembler {
         addr = getBinary(addr);
         instructionInBinary += dest;
         instructionInBinary += addr;
-        return instructionInBinary;
+        return binary2Hex(instructionInBinary);
     }
 
     public static String st(String src, String addr){
@@ -39,7 +39,7 @@ public class Assembler {
         addr = getBinary(addr);
         instructionInBinary += src;
         instructionInBinary += addr;
-        return instructionInBinary;
+        return binary2Hex(instructionInBinary);
     }
 
     // Method to convert binary to hex
