@@ -42,43 +42,35 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String ja(String sign, String addr){
+    public static String ja(String addr){
         String instructionInBinary = "1011";
-        sign = getBinary(sign);
         addr = getBinary(addr);
-        instructionInBinary += sign;
         instructionInBinary += addr;
-        instructionInBinary += "000";
+        instructionInBinary += "0000";
         return binary2Hex(instructionInBinary);
     }
 
-    public static String jb(String sign, String addr){
+    public static String jb(String addr){
         String instructionInBinary = "1100";
-        sign = getBinary(sign);
         addr = getBinary(addr);
-        instructionInBinary += sign;
         instructionInBinary += addr;
-        instructionInBinary += "000";
+        instructionInBinary += "0000";
         return binary2Hex(instructionInBinary);
     }
 
-    public static String jae(String sign, String addr){
+    public static String jae(String addr){
         String instructionInBinary = "1101";
-        sign = getBinary(sign);
         addr = getBinary(addr);
-        instructionInBinary += sign;
         instructionInBinary += addr;
-        instructionInBinary += "000";
+        instructionInBinary += "0000";
         return binary2Hex(instructionInBinary);
     }
 
-    public static String jbe(String sign, String addr){
+    public static String jbe(String addr){
         String instructionInBinary = "1110";
-        sign = getBinary(sign);
         addr = getBinary(addr);
-        instructionInBinary += sign;
         instructionInBinary += addr;
-        instructionInBinary += "000";
+        instructionInBinary += "0000";
         return binary2Hex(instructionInBinary);
     }
 
