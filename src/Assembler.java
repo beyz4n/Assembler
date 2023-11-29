@@ -74,6 +74,49 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    public static String add(String dest, String src1, String src2){
+        String instructionInBinary = "0000";
+        dest = getBinary(dest);
+        src1 = getBinary(src1);
+        src2 = getBinary(src2);
+        instructionInBinary += dest;
+        instructionInBinary += src1;
+        instructionInBinary += src2;
+        instructionInBinary += "00";
+        return binary2Hex(instructionInBinary);
+    }
+
+    public static String addi(String dest, String src, String imm){
+        String instructionInBinary = "0001";
+        src = getBinary(src);
+        imm = getBinary(imm);
+        instructionInBinary += src;
+        instructionInBinary += imm;
+        return binary2Hex(instructionInBinary);
+    }
+    public static String nor(String dest, String src1, String src2){
+        String instructionInBinary = "0010";
+        dest = getBinary(dest);
+        src1 = getBinary(src1);
+        src2 = getBinary(src2);
+        instructionInBinary += dest;
+        instructionInBinary += src1;
+        instructionInBinary += src2;
+        instructionInBinary += "00";
+        return binary2Hex(instructionInBinary);
+    }
+    public static String and(String dest, String src1, String src2){
+        String instructionInBinary = "0011";
+        dest = getBinary(dest);
+        src1 = getBinary(src1);
+        src2 = getBinary(src2);
+        instructionInBinary += dest;
+        instructionInBinary += src1;
+        instructionInBinary += src2;
+        instructionInBinary += "00";
+        return binary2Hex(instructionInBinary);
+    }
+
     // Method to convert binary to hex
     public static String binary2Hex(String binary){
         int check = (int)(Math.ceil(binary.length() / 4));
@@ -112,6 +155,10 @@ public class Assembler {
             }
         }
         return hex;
+    }
+
+    public static String getBinary(String a){
+        return "";
     }
 
 }
