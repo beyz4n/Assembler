@@ -1,6 +1,10 @@
 public class Assembler {
     public static void main(String[] args) {
 
+        String a = "-64";
+        String a_s = getBinary4Immediate(a);
+        System.out.println(a_s);
+
     }
 
     public static String andi(String dest, String src1, String imm){
@@ -157,8 +161,90 @@ public class Assembler {
         return hex;
     }
 
-    public static String getBinary(String a){
-        return "";
+    public static String getBinary4Immediate(String immediateString){
+       String binary = "";
+       double immediate = 0;
+       try {
+           immediate = Double.parseDouble(immediateString);
+       } catch (Exception e){
+           System.out.println("Given immediate value does not correct : " + immediateString);
+           System.exit(1);
+           return binary;
+       }
+       if(immediate < -32 || immediate > 31){
+           System.out.println("Given immediate value can not be represented in our system : " + immediateString);
+           System.exit(1);
+           return binary;
+       }
+
+       if(immediate >= 0){
+           binary += "0";
+           for(int power = 4; power >= 0 ; power--){
+               if(immediate >= Math.pow(2, power)){
+                   immediate -= Math.pow(2, power);
+                   binary += "1";
+               }
+               else{
+                   binary += "0";
+               }
+           }
+        }
+       else{
+           binary += "1";
+           double positiveImmediate = -1*immediate - 1;
+
+           for(int power = 4; power >= 0; power--){
+               if(positiveImmediate >= Math.pow(2, power)){
+                   positiveImmediate -= Math.pow(2, power);
+                   binary += "0";
+               }
+               else{
+                   binary += "1";
+               }
+           }
+        }
+        return binary;
     }
+
+
+
+    public static String getBinary4Registers(String register){
+        String binary = "";
+
+        if(!(register.startsWith("R") || register.startsWith("r"))){
+            System.out.println("Given parameter is not register name !");
+            System.exit(1);
+            return binary;
+        }
+
+        double registerNumber = 0;
+
+        try {
+            registerNumber = Double.parseDouble(register.substring(1));
+        }
+        catch(Exception e){
+            System.out.println("Given register does not exist : " + register);
+            System.exit(1);
+            return binary;
+        }
+
+        if( registerNumber <= 0 || registerNumber >= 16){
+            System.out.println("Given register does not exist : " + register);
+            return binary;
+        }
+
+        for(int power = 3; power >= 0 ; power--){
+            if(registerNumber >= Math.pow(2, power)){
+                registerNumber -= Math.pow(2, power);
+                binary += "1";
+            }
+            else{
+                binary += "0";
+            }
+        }
+
+        return binary;
+    }
+
 
 }
