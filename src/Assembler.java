@@ -178,6 +178,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    // Method for add instruction
     public static String add(String dest, String src1, String src2) {
         String instructionInBinary = "0000";
         dest = getBinary4Registers(dest);
@@ -190,6 +191,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    // Method for addi instruction
     public static String addi(String dest, String src, String imm) {
         String instructionInBinary = "0001";
         dest = getBinary4Registers(dest);
@@ -201,6 +203,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    // Method for nor instruction
     public static String nor(String dest, String src1, String src2) {
         String instructionInBinary = "0010";
         dest = getBinary4Registers(dest);
@@ -213,6 +216,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    // Method for and instruction
     public static String and(String dest, String src1, String src2) {
         String instructionInBinary = "0011";
         dest = getBinary4Registers(dest);
@@ -297,45 +301,50 @@ public class Assembler {
         return hex;
     }
 
-    // Gets decimal as an input and convert it to binary representation
-    public static String getBinary(String immediateString, int bitSize) {
+    // Method to get binary representation of the given decimal number
+    public static String getBinary(String numberString, int bitSize) {
         String binary = "";
-        double immediate = 0;
+        double number = 0;
+        // Convert numberString to double variable
         try {
-            immediate = Double.parseDouble(immediateString);
+            number = Double.parseDouble(numberString);
         } catch (Exception e) {
-            System.out.println("Given immediate value does not correct : " + immediateString);
+            System.out.println("Given number does not correct : " + numberString);
             System.exit(1);
             return binary;
         }
         int power = bitSize - 2;
-        double upperLimit = Math.pow(2, bitSize) - 1;
-        double lowerLimit = -1 * Math.pow(2, bitSize);
+        double upperLimit = Math.pow(2, bitSize) - 1; // Maximum value of the number that can be given to the function
+        double lowerLimit = -1 * Math.pow(2, bitSize); // Maximum value of the number that can be given to the function
 
 
-        if (immediate < lowerLimit || immediate > upperLimit) {
-            System.out.println("Given immediate value can not be represented in our system : " + immediateString);
+        // Check if the given number exceed the range
+        if (number < lowerLimit || number > upperLimit) {
+            System.out.println("Given number can not be represented in our system : " + numberString);
             System.exit(1);
             return binary;
         }
 
-        if (immediate >= 0) {
-            binary += "0";
+        if (number >= 0) { // if the number is positive
+            binary += "0"; // put zero as a sign bit in order to show the number is positive
+
+            // calculate bit representation
             for (; power >= 0; power--) {
-                if (immediate >= Math.pow(2, power)) {
-                    immediate -= Math.pow(2, power);
+                if (number >= Math.pow(2, power)) {
+                    number -= Math.pow(2, power);
                     binary += "1";
                 } else {
                     binary += "0";
                 }
             }
-        } else {
-            binary += "1";
-            double positiveImmediate = -1 * immediate - 1;
+        } else { // if the number is negative
+            binary += "1"; // put one as a sign bit in order to show the number is positive
 
+            // calculate bit representation
+            double positiveNumber = -1 * number - 1;
             for (; power >= 0; power--) {
-                if (positiveImmediate >= Math.pow(2, power)) {
-                    positiveImmediate -= Math.pow(2, power);
+                if (positiveNumber >= Math.pow(2, power)) {
+                    positiveNumber -= Math.pow(2, power);
                     binary += "0";
                 } else {
                     binary += "1";
@@ -345,10 +354,11 @@ public class Assembler {
         return binary;
     }
 
-
+    // Method to generate binary representation of registers
     public static String getBinary4Registers(String register) {
         String binary = "";
 
+        // Check if given string starts with 'R'
         if (!(register.startsWith("R") || register.startsWith("r"))) {
             System.out.println("Given parameter is not register name !");
             System.exit(1);
@@ -357,6 +367,7 @@ public class Assembler {
 
         double registerNumber = 0;
 
+        // Extract register number from register string
         try {
             registerNumber = Double.parseDouble(register.substring(1));
         } catch (Exception e) {
@@ -365,11 +376,13 @@ public class Assembler {
             return binary;
         }
 
-        if (registerNumber <= 0 || registerNumber >= 16) {
+        // Check if given register number between 0 and 16
+        if (registerNumber <= 0 || registerNumber >= 15) {
             System.out.println("Given register does not exist : " + register);
             return binary;
         }
 
+        // Get binary representation of given register
         for (int power = 3; power >= 0; power--) {
             if (registerNumber >= Math.pow(2, power)) {
                 registerNumber -= Math.pow(2, power);
