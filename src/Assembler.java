@@ -7,23 +7,25 @@ import static java.lang.Character.isDigit;
 
 public class Assembler {
     static String[] registerArray = {"R0", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15"};
-
+    //registerArray contains 16 registers from R0 to R15
     public static void main(String[] args) {
         try {
-            File inputFile = new File("input.txt");
-            File outputFile = new File("output.hex");
-            PrintWriter printWriter = new PrintWriter(outputFile);
+            File inputFile = new File("input.txt");    //input file
+            File outputFile = new File("output.hex");   //output file
+            PrintWriter printWriter = new PrintWriter(outputFile);   //to be able to write into our output file
             String output = "v2.0 raw";
             Scanner sc = new Scanner(inputFile);
-            while (sc.hasNextLine()) {
+            while (sc.hasNextLine()) {       //reading input file line by line
                 String line = sc.nextLine();
-                String[] lineArray = line.split(" ");
-                int count = lineArray.length;
+                String[] lineArray = line.split(" "); //splitting lines into words
+                int count = lineArray.length;  //number of words in a line
 
-                if (line.isBlank()) {
+                if (line.isBlank()) {   //if line is empty, continue executing
                     continue;
                 }
 
+                //if count is equal to 4, there are 6 possibilities such as ADD, NOR, AND, NAND, ADDI, ANDI
+                //invoke the corresponding function and write it to output file
                 if (count == 4) {
                     if (lineArray[0].equals("ADD") && isRegister(lineArray[1]) && isRegister(lineArray[2]) && isRegister(lineArray[3])) {
                         output += "\n" + (add(lineArray[1], lineArray[2], lineArray[3]));
@@ -40,7 +42,10 @@ public class Assembler {
                     } else {
                         System.out.println("Invalid instruction.");
                     }
-                } else if (count == 3) {
+                }
+                //if count is equal to 3, there are 3 possibilities such as LD, ST, CMP.
+                //invoke the corresponding function and write it to output file
+                else if (count == 3) {
                     if (lineArray[0].equals("LD") && isRegister(lineArray[1]) && isInteger(lineArray[2])) {
                         output += "\n" + (ld(lineArray[1], lineArray[2]));
                     } else if (lineArray[0].equals("ST") && isRegister(lineArray[1]) && isInteger(lineArray[2])) {
@@ -50,7 +55,10 @@ public class Assembler {
                     } else {
                         System.out.println("Invalid instruction.");
                     }
-                } else if (count == 2) {
+                }
+                //if count is equal to 2, there are 6 possibilities such as JUMP, JE, JA, JB, JAE, JBE.
+                //invoke the corresponding function and write it to output file
+                else if (count == 2) {
                     if (lineArray[0].equals("JUMP") && isInteger(lineArray[1])) {
                         output += "\n" + (jump(lineArray[1]));
                     } else if (lineArray[0].equals("JE") && isInteger(lineArray[1])) {
@@ -78,6 +86,7 @@ public class Assembler {
         }
     }
 
+    //checking given argument contains invalid registers or not
     public static boolean isRegister(String reg) {
         boolean isReg = false;
         for (String s : registerArray) {
@@ -89,6 +98,7 @@ public class Assembler {
         return isReg;
     }
 
+    //checking given argument contains integer
     public static boolean isInteger(String str) {
         boolean isInteger = true;
         if (str.charAt(0) == '-' || isDigit(str.charAt(0))) {
@@ -225,6 +235,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    //cmp method converts desired instruction to binary which contains specific opcode and registers, after that converts it to hexadecimal
     public static String cmp(String op1, String op2) {
         String instructionInBinary = "1000";
         op1 = getBinary4Registers(op1);
@@ -235,6 +246,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    //jump method converts desired instruction to binary which contains specific opcode and address, after that converts it to hexadecimal
     public static String jump(String addr) {
         String instructionInBinary = "1001";
         addr = getBinary(addr, 10);
@@ -243,6 +255,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    //je method converts desired instruction to binary which contains specific opcode and address, after that converts it to hexadecimal
     public static String je(String addr) {
         String instructionInBinary = "1010";
         addr = getBinary(addr, 10);
