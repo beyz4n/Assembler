@@ -1,16 +1,18 @@
 public class Assembler {
     public static void main(String[] args) {
 
-        String a = "-64";
-        String a_s = getBinary4Immediate(a);
+        String a = "-1";
+        String a_s = getBinary(a,10);
         System.out.println(a_s);
 
     }
 
     public static String andi(String dest, String src1, String imm){
         String instructionInBinary = "0100";
-        src1 = getBinary(src1);
-        imm = getBinary(imm);
+        src1 = getBinary4Registers(src1);
+        imm = getBinary(imm,6);
+        dest = getBinary4Registers(dest);
+        instructionInBinary += dest;
         instructionInBinary += src1;
         instructionInBinary += imm;
         return binary2Hex(instructionInBinary);
@@ -18,9 +20,9 @@ public class Assembler {
 
     public static String nand(String dest, String src1, String src2){
         String instructionInBinary = "0101";
-        dest = getBinary(dest);
-        src1 = getBinary(src1);
-        src2 = getBinary(src2);
+        dest = getBinary4Registers(dest);
+        src1 = getBinary4Registers(src1);
+        src2 = getBinary4Registers(src2);
         instructionInBinary += dest;
         instructionInBinary += src1;
         instructionInBinary += src2;
@@ -30,8 +32,8 @@ public class Assembler {
 
     public static String ld(String dest, String addr){
         String instructionInBinary = "0110";
-        dest = getBinary(dest);
-        addr = getBinary(addr);
+        dest = getBinary4Registers(dest);
+        addr = getBinary(addr, 10);
         instructionInBinary += dest;
         instructionInBinary += addr;
         return binary2Hex(instructionInBinary);
@@ -39,8 +41,8 @@ public class Assembler {
 
     public static String st(String src, String addr){
         String instructionInBinary = "0111";
-        src = getBinary(src);
-        addr = getBinary(addr);
+        src = getBinary4Registers(src);
+        addr = getBinary(addr, 10);
         instructionInBinary += src;
         instructionInBinary += addr;
         return binary2Hex(instructionInBinary);
@@ -48,7 +50,7 @@ public class Assembler {
 
     public static String ja(String addr){
         String instructionInBinary = "1011";
-        addr = getBinary(addr);
+        addr = getBinary(addr, 10);
         instructionInBinary += addr;
         instructionInBinary += "0000";
         return binary2Hex(instructionInBinary);
@@ -56,7 +58,7 @@ public class Assembler {
 
     public static String jb(String addr){
         String instructionInBinary = "1100";
-        addr = getBinary(addr);
+        addr = getBinary(addr, 10);
         instructionInBinary += addr;
         instructionInBinary += "0000";
         return binary2Hex(instructionInBinary);
@@ -64,7 +66,7 @@ public class Assembler {
 
     public static String jae(String addr){
         String instructionInBinary = "1101";
-        addr = getBinary(addr);
+        addr = getBinary(addr, 10);
         instructionInBinary += addr;
         instructionInBinary += "0000";
         return binary2Hex(instructionInBinary);
@@ -72,7 +74,7 @@ public class Assembler {
 
     public static String jbe(String addr){
         String instructionInBinary = "1110";
-        addr = getBinary(addr);
+        addr = getBinary(addr, 10);
         instructionInBinary += addr;
         instructionInBinary += "0000";
         return binary2Hex(instructionInBinary);
@@ -80,9 +82,9 @@ public class Assembler {
 
     public static String add(String dest, String src1, String src2){
         String instructionInBinary = "0000";
-        dest = getBinary(dest);
-        src1 = getBinary(src1);
-        src2 = getBinary(src2);
+        dest = getBinary4Registers(dest);
+        src1 = getBinary4Registers(src1);
+        src2 = getBinary4Registers(src2);
         instructionInBinary += dest;
         instructionInBinary += src1;
         instructionInBinary += src2;
@@ -92,17 +94,19 @@ public class Assembler {
 
     public static String addi(String dest, String src, String imm){
         String instructionInBinary = "0001";
-        src = getBinary(src);
-        imm = getBinary(imm);
+        dest = getBinary4Registers(dest);
+        src = getBinary4Registers(src);
+        imm = getBinary(imm, 10);
+        instructionInBinary += dest;
         instructionInBinary += src;
         instructionInBinary += imm;
         return binary2Hex(instructionInBinary);
     }
     public static String nor(String dest, String src1, String src2){
         String instructionInBinary = "0010";
-        dest = getBinary(dest);
-        src1 = getBinary(src1);
-        src2 = getBinary(src2);
+        dest = getBinary4Registers(dest);
+        src1 = getBinary4Registers(src1);
+        src2 = getBinary4Registers(src2);
         instructionInBinary += dest;
         instructionInBinary += src1;
         instructionInBinary += src2;
@@ -111,9 +115,9 @@ public class Assembler {
     }
     public static String and(String dest, String src1, String src2){
         String instructionInBinary = "0011";
-        dest = getBinary(dest);
-        src1 = getBinary(src1);
-        src2 = getBinary(src2);
+        dest = getBinary4Registers(dest);
+        src1 = getBinary4Registers(src1);
+        src2 = getBinary4Registers(src2);
         instructionInBinary += dest;
         instructionInBinary += src1;
         instructionInBinary += src2;
@@ -161,7 +165,8 @@ public class Assembler {
         return hex;
     }
 
-    public static String getBinary4Immediate(String immediateString){
+    // Gets decimal as an input and convert it to binary representation
+    public static String getBinary(String immediateString, int bitSize){
        String binary = "";
        double immediate = 0;
        try {
@@ -171,7 +176,13 @@ public class Assembler {
            System.exit(1);
            return binary;
        }
-       if(immediate < -32 || immediate > 31){
+        int power = bitSize - 2;
+        double upperLimit = Math.pow(2, bitSize) -1;
+        double lowerLimit = -1 * Math.pow(2, bitSize);
+
+
+
+       if(immediate < lowerLimit || immediate > upperLimit){
            System.out.println("Given immediate value can not be represented in our system : " + immediateString);
            System.exit(1);
            return binary;
@@ -179,7 +190,7 @@ public class Assembler {
 
        if(immediate >= 0){
            binary += "0";
-           for(int power = 4; power >= 0 ; power--){
+           for(; power >= 0 ; power--){
                if(immediate >= Math.pow(2, power)){
                    immediate -= Math.pow(2, power);
                    binary += "1";
@@ -193,7 +204,7 @@ public class Assembler {
            binary += "1";
            double positiveImmediate = -1*immediate - 1;
 
-           for(int power = 4; power >= 0; power--){
+           for(; power >= 0; power--){
                if(positiveImmediate >= Math.pow(2, power)){
                    positiveImmediate -= Math.pow(2, power);
                    binary += "0";
