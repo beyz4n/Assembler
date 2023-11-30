@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
 public class Assembler {
     public static void main(String[] args) {
 
@@ -5,8 +9,118 @@ public class Assembler {
         String a_s = getBinary(a,10);
         System.out.println(a_s);
 
+        try {
+
+            File file = new File("Demo.txt");
+            Scanner sc = new Scanner(file);
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                int count = 0;
+                String[] arr = line.split(" ");
+                count = arr.length;
+
+                if (count == 4) {
+                  if(arr[0].equals("ADD") && isRegister(arr[1]) && isRegister(arr[2]) && isRegister(arr[3])){
+                      add(arr[1],arr[2],arr[3]);
+                  }
+
+
+                  else if(arr[0].equals("NOR") && isRegister(arr[1]) && isRegister(arr[2]) && isRegister(arr[3])){
+                        nor(arr[1],arr[2],arr[3]);
+                  }
+
+                  else if(arr[0].equals("AND") && isRegister(arr[1]) && isRegister(arr[2]) && isRegister(arr[3])){
+                      and(arr[1],arr[2],arr[3]);
+                  }
+
+                  else if(arr[0].equals("NAND") && isRegister(arr[1]) && isRegister(arr[2]) && isRegister(arr[3])){
+                      nand(arr[1],arr[2],arr[3]);
+                  }
+
+                  else if(arr[0].equals("ADDI") && isRegister(arr[1]) && isRegister(arr[2]) && isInteger(arr[3])){
+                      addi(arr[1],arr[2],arr[3]);
+                  }
+
+                  else if(arr[0].equals("ANDI") && isRegister(arr[1]) && isRegister(arr[2]) && isInteger(arr[3])){
+                      andi(arr[1],arr[2],arr[3]);
+                  }
+                  else{
+                      System.out.println("Invalid instruction.");
+                  }
+                }
+
+                else if (count == 3) {
+                    if(arr[0].equals("LD") && isRegister(arr[1]) && isInteger(arr[2])){
+                        ld(arr[1],arr[2]);
+                    }
+                    else if(arr[0].equals("ST") && isRegister(arr[1]) && isInteger(arr[2])){
+                        st(arr[1],arr[2]);
+                    }
+                    else if(arr[0].equals("CMP") && isRegister(arr[1]) && isRegister(arr[2])){
+                        cmp(arr[1],arr[2]);
+                    }
+                    else {
+                        System.out.println("Invalid instruction.");
+                    }
+                }
+                else if (count == 2) {
+                    if(arr[0].equals("JUMP") && isInteger(arr[1])){
+                        jump(arr[1]);
+                    }
+                    else if(arr[0].equals("JE") && isInteger(arr[1])){
+                        je(arr[1]);
+                    }
+                    else if(arr[0].equals("JA") && isInteger(arr[1])){
+                        ja(arr[1]);
+                    }
+                    else if(arr[0].equals("JB") && isInteger(arr[1])){
+                        jb(arr[1]);
+                    }
+                    else if(arr[0].equals("JAE") && isInteger(arr[1])){
+                        jae(arr[1]);
+                    }
+                    else if(arr[0].equals("JBE") && isInteger(arr[1])){
+                        jbe(arr[1]);
+                    }
+                    else{
+                        System.out.println("Invalid instruction.");
+                    }
+                }
+                else {
+                    System.out.println("Invalid number of arguments in instruction.");
+                }
+                }
+                sc.close();
+            }
+
+        catch(IOException e) {
+            System.out.println("File not found.");
+        }
+        }
+
+        static String[] registerArray = {"R0","R1","R2","R3","R4","R5","R6","R7","R8","R9",
+                "R10","R11","R12","R13","R14","R15"};
+    public static boolean isRegister(String reg){
+        boolean isReg = false;
+        for(int i = 0 ; i < registerArray.length ; i++){
+            if(registerArray[i].equals(reg)){
+                isReg = true;
+                break;
+            }
+        }
+            return isReg;
     }
 
+    public static boolean isInteger(String reg) {
+        boolean isInt = true;
+        for (int i = 0; i < reg.length(); i++) {
+            if (reg.charAt(i) >= 58 || reg.charAt(i) <= 47) {
+                isInt = false;
+                break;
+            }
+        }
+        return isInt;
+    }
     public static String andi(String dest, String src1, String imm){
         String instructionInBinary = "0100";
         src1 = getBinary4Registers(src1);
