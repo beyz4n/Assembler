@@ -125,6 +125,32 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    public static String cmp(String op1, String op2){
+        String instructionInBinary = "1000";
+        op1 = getBinary4Registers(op1);
+        op2 = getBinary4Registers(op2);
+        instructionInBinary += op1;
+        instructionInBinary += op2;
+        instructionInBinary += "000000";
+        return binary2Hex(instructionInBinary);
+    }
+
+    public static String jump(String addr){
+        String instructionInBinary = "1001";
+        addr = getBinary(addr, 10);
+        instructionInBinary += addr;
+        instructionInBinary += "0000";
+        return binary2Hex(instructionInBinary);
+    }
+
+    public static String je(String addr){
+        String instructionInBinary = "1010";
+        addr = getBinary(addr, 10);
+        instructionInBinary += addr;
+        instructionInBinary += "0000";
+        return binary2Hex(instructionInBinary);
+    }
+
     // Method to convert binary to hex
     public static String binary2Hex(String binary){
         int check = (int)(Math.ceil(binary.length() / 4));
