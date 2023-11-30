@@ -1,130 +1,114 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
+import static java.lang.Character.isDigit;
+
 public class Assembler {
+    static String[] registerArray = {"R0", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15"};
+
     public static void main(String[] args) {
-
-        String a = "-1";
-        String a_s = getBinary(a,10);
-        System.out.println(a_s);
-
         try {
-
-            File file = new File("Demo.txt");
-            Scanner sc = new Scanner(file);
+            File inputFile = new File("input.txt");
+            File outputFile = new File("output.hex");
+            PrintWriter printWriter = new PrintWriter(outputFile);
+            String output = "v2.0 raw";
+            Scanner sc = new Scanner(inputFile);
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
-                int count = 0;
-                String[] arr = line.split(" ");
-                count = arr.length;
+                String[] lineArray = line.split(" ");
+                int count = lineArray.length;
+
+                if (line.isBlank()) {
+                    continue;
+                }
 
                 if (count == 4) {
-                  if(arr[0].equals("ADD") && isRegister(arr[1]) && isRegister(arr[2]) && isRegister(arr[3])){
-                      add(arr[1],arr[2],arr[3]);
-                  }
-
-
-                  else if(arr[0].equals("NOR") && isRegister(arr[1]) && isRegister(arr[2]) && isRegister(arr[3])){
-                        nor(arr[1],arr[2],arr[3]);
-                  }
-
-                  else if(arr[0].equals("AND") && isRegister(arr[1]) && isRegister(arr[2]) && isRegister(arr[3])){
-                      and(arr[1],arr[2],arr[3]);
-                  }
-
-                  else if(arr[0].equals("NAND") && isRegister(arr[1]) && isRegister(arr[2]) && isRegister(arr[3])){
-                      nand(arr[1],arr[2],arr[3]);
-                  }
-
-                  else if(arr[0].equals("ADDI") && isRegister(arr[1]) && isRegister(arr[2]) && isInteger(arr[3])){
-                      addi(arr[1],arr[2],arr[3]);
-                  }
-
-                  else if(arr[0].equals("ANDI") && isRegister(arr[1]) && isRegister(arr[2]) && isInteger(arr[3])){
-                      andi(arr[1],arr[2],arr[3]);
-                  }
-                  else{
-                      System.out.println("Invalid instruction.");
-                  }
-                }
-
-                else if (count == 3) {
-                    if(arr[0].equals("LD") && isRegister(arr[1]) && isInteger(arr[2])){
-                        ld(arr[1],arr[2]);
-                    }
-                    else if(arr[0].equals("ST") && isRegister(arr[1]) && isInteger(arr[2])){
-                        st(arr[1],arr[2]);
-                    }
-                    else if(arr[0].equals("CMP") && isRegister(arr[1]) && isRegister(arr[2])){
-                        cmp(arr[1],arr[2]);
-                    }
-                    else {
+                    if (lineArray[0].equals("ADD") && isRegister(lineArray[1]) && isRegister(lineArray[2]) && isRegister(lineArray[3])) {
+                        output += "\n" + (add(lineArray[1], lineArray[2], lineArray[3]));
+                    } else if (lineArray[0].equals("NOR") && isRegister(lineArray[1]) && isRegister(lineArray[2]) && isRegister(lineArray[3])) {
+                        output += "\n" + (nor(lineArray[1], lineArray[2], lineArray[3]));
+                    } else if (lineArray[0].equals("AND") && isRegister(lineArray[1]) && isRegister(lineArray[2]) && isRegister(lineArray[3])) {
+                        output += "\n" + (and(lineArray[1], lineArray[2], lineArray[3]));
+                    } else if (lineArray[0].equals("NAND") && isRegister(lineArray[1]) && isRegister(lineArray[2]) && isRegister(lineArray[3])) {
+                        output += "\n" + (nand(lineArray[1], lineArray[2], lineArray[3]));
+                    } else if (lineArray[0].equals("ADDI") && isRegister(lineArray[1]) && isRegister(lineArray[2]) && isInteger(lineArray[3])) {
+                        output += "\n" + (addi(lineArray[1], lineArray[2], lineArray[3]));
+                    } else if (lineArray[0].equals("ANDI") && isRegister(lineArray[1]) && isRegister(lineArray[2]) && isInteger(lineArray[3])) {
+                        output += "\n" + (andi(lineArray[1], lineArray[2], lineArray[3]));
+                    } else {
                         System.out.println("Invalid instruction.");
                     }
-                }
-                else if (count == 2) {
-                    if(arr[0].equals("JUMP") && isInteger(arr[1])){
-                        jump(arr[1]);
-                    }
-                    else if(arr[0].equals("JE") && isInteger(arr[1])){
-                        je(arr[1]);
-                    }
-                    else if(arr[0].equals("JA") && isInteger(arr[1])){
-                        ja(arr[1]);
-                    }
-                    else if(arr[0].equals("JB") && isInteger(arr[1])){
-                        jb(arr[1]);
-                    }
-                    else if(arr[0].equals("JAE") && isInteger(arr[1])){
-                        jae(arr[1]);
-                    }
-                    else if(arr[0].equals("JBE") && isInteger(arr[1])){
-                        jbe(arr[1]);
-                    }
-                    else{
+                } else if (count == 3) {
+                    if (lineArray[0].equals("LD") && isRegister(lineArray[1]) && isInteger(lineArray[2])) {
+                        output += "\n" + (ld(lineArray[1], lineArray[2]));
+                    } else if (lineArray[0].equals("ST") && isRegister(lineArray[1]) && isInteger(lineArray[2])) {
+                        output += "\n" + (st(lineArray[1], lineArray[2]));
+                    } else if (lineArray[0].equals("CMP") && isRegister(lineArray[1]) && isRegister(lineArray[2])) {
+                        output += "\n" + (cmp(lineArray[1], lineArray[2]));
+                    } else {
                         System.out.println("Invalid instruction.");
                     }
-                }
-                else {
+                } else if (count == 2) {
+                    if (lineArray[0].equals("JUMP") && isInteger(lineArray[1])) {
+                        output += "\n" + (jump(lineArray[1]));
+                    } else if (lineArray[0].equals("JE") && isInteger(lineArray[1])) {
+                        output += "\n" + (je(lineArray[1]));
+                    } else if (lineArray[0].equals("JA") && isInteger(lineArray[1])) {
+                        output += "\n" + (ja(lineArray[1]));
+                    } else if (lineArray[0].equals("JB") && isInteger(lineArray[1])) {
+                        output += "\n" + (jb(lineArray[1]));
+                    } else if (lineArray[0].equals("JAE") && isInteger(lineArray[1])) {
+                        output += "\n" + (jae(lineArray[1]));
+                    } else if (lineArray[0].equals("JBE") && isInteger(lineArray[1])) {
+                        output += "\n" + (jbe(lineArray[1]));
+                    } else {
+                        System.out.println("Invalid instruction.");
+                    }
+                } else {
                     System.out.println("Invalid number of arguments in instruction.");
                 }
-                }
-                sc.close();
             }
-
-        catch(IOException e) {
+            sc.close();
+            printWriter.print(output);
+            printWriter.close();
+        } catch (IOException e) {
             System.out.println("File not found.");
         }
-        }
+    }
 
-        static String[] registerArray = {"R0","R1","R2","R3","R4","R5","R6","R7","R8","R9",
-                "R10","R11","R12","R13","R14","R15"};
-    public static boolean isRegister(String reg){
+    public static boolean isRegister(String reg) {
         boolean isReg = false;
-        for(int i = 0 ; i < registerArray.length ; i++){
-            if(registerArray[i].equals(reg)){
+        for (String s : registerArray) {
+            if (s.equals(reg)) {
                 isReg = true;
                 break;
             }
         }
-            return isReg;
+        return isReg;
     }
 
-    public static boolean isInteger(String reg) {
-        boolean isInt = true;
-        for (int i = 0; i < reg.length(); i++) {
-            if (reg.charAt(i) >= 58 || reg.charAt(i) <= 47) {
-                isInt = false;
-                break;
+    public static boolean isInteger(String str) {
+        boolean isInteger = true;
+        if (str.charAt(0) == '-' || isDigit(str.charAt(0))) {
+            for (int i = 1; i < str.length(); i++) {
+                if (!isDigit(str.charAt(i))) {
+                    isInteger = false;
+                    return isInteger;
+                }
             }
+        } else {
+            isInteger = false;
+            return isInteger;
         }
-        return isInt;
+        return isInteger;
     }
-    public static String andi(String dest, String src1, String imm){
+
+    public static String andi(String dest, String src1, String imm) {
         String instructionInBinary = "0100";
         src1 = getBinary4Registers(src1);
-        imm = getBinary(imm,6);
+        imm = getBinary(imm, 6);
         dest = getBinary4Registers(dest);
         instructionInBinary += dest;
         instructionInBinary += src1;
@@ -132,7 +116,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String nand(String dest, String src1, String src2){
+    public static String nand(String dest, String src1, String src2) {
         String instructionInBinary = "0101";
         dest = getBinary4Registers(dest);
         src1 = getBinary4Registers(src1);
@@ -144,7 +128,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String ld(String dest, String addr){
+    public static String ld(String dest, String addr) {
         String instructionInBinary = "0110";
         dest = getBinary4Registers(dest);
         addr = getBinary(addr, 10);
@@ -153,7 +137,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String st(String src, String addr){
+    public static String st(String src, String addr) {
         String instructionInBinary = "0111";
         src = getBinary4Registers(src);
         addr = getBinary(addr, 10);
@@ -162,7 +146,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String ja(String addr){
+    public static String ja(String addr) {
         String instructionInBinary = "1011";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -170,7 +154,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String jb(String addr){
+    public static String jb(String addr) {
         String instructionInBinary = "1100";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -178,7 +162,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String jae(String addr){
+    public static String jae(String addr) {
         String instructionInBinary = "1101";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -186,7 +170,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String jbe(String addr){
+    public static String jbe(String addr) {
         String instructionInBinary = "1110";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -194,7 +178,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String add(String dest, String src1, String src2){
+    public static String add(String dest, String src1, String src2) {
         String instructionInBinary = "0000";
         dest = getBinary4Registers(dest);
         src1 = getBinary4Registers(src1);
@@ -206,7 +190,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String addi(String dest, String src, String imm){
+    public static String addi(String dest, String src, String imm) {
         String instructionInBinary = "0001";
         dest = getBinary4Registers(dest);
         src = getBinary4Registers(src);
@@ -216,7 +200,8 @@ public class Assembler {
         instructionInBinary += imm;
         return binary2Hex(instructionInBinary);
     }
-    public static String nor(String dest, String src1, String src2){
+
+    public static String nor(String dest, String src1, String src2) {
         String instructionInBinary = "0010";
         dest = getBinary4Registers(dest);
         src1 = getBinary4Registers(src1);
@@ -227,7 +212,8 @@ public class Assembler {
         instructionInBinary += "00";
         return binary2Hex(instructionInBinary);
     }
-    public static String and(String dest, String src1, String src2){
+
+    public static String and(String dest, String src1, String src2) {
         String instructionInBinary = "0011";
         dest = getBinary4Registers(dest);
         src1 = getBinary4Registers(src1);
@@ -239,7 +225,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String cmp(String op1, String op2){
+    public static String cmp(String op1, String op2) {
         String instructionInBinary = "1000";
         op1 = getBinary4Registers(op1);
         op2 = getBinary4Registers(op2);
@@ -249,7 +235,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String jump(String addr){
+    public static String jump(String addr) {
         String instructionInBinary = "1001";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -257,7 +243,7 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
-    public static String je(String addr){
+    public static String je(String addr) {
         String instructionInBinary = "1010";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -266,103 +252,104 @@ public class Assembler {
     }
 
     // Method to convert binary to hex
-    public static String binary2Hex(String binary){
-        int check = (int)(Math.ceil(binary.length() / 4));
+    public static String binary2Hex(String binary) {
+        double check = Math.ceil(binary.length() / 4.0);
         String part;
         String hex = "";
-        for(int i = 0; i < check; i++){
-            if(binary.length() >= 4) {
+        for (int i = 0; i < check; i++) {
+            if (binary.length() >= 4) {
                 part = binary.substring(binary.length() - 4);
                 binary = binary.substring(0, binary.length() - 4);
-            }
-            else{
+            } else {
                 part = binary;
-                switch (part.length()){
-                    case 1: part = "000" + part; break;
-                    case 2: part = "00" + part; break;
-                    case 3: part = "0" + part; break;
+                switch (part.length()) {
+                    case 1:
+                        part = "000" + part;
+                        break;
+                    case 2:
+                        part = "00" + part;
+                        break;
+                    case 3:
+                        part = "0" + part;
+                        break;
                 }
             }
-            switch (part) {
-                case "0000": hex = "0" + hex; break;
-                case "0001": hex = "1" + hex; break;
-                case "0010": hex = "2" + hex; break;
-                case "0011": hex = "3" + hex; break;
-                case "0100": hex = "4" + hex; break;
-                case "0101": hex = "5" + hex; break;
-                case "0110": hex = "6" + hex; break;
-                case "0111": hex = "7" + hex; break;
-                case "1000": hex = "8" + hex; break;
-                case "1001": hex = "9" + hex; break;
-                case "1010": hex = "A" + hex; break;
-                case "1011": hex = "B" + hex; break;
-                case "1100": hex = "C" + hex; break;
-                case "1101": hex = "D" + hex; break;
-                case "1110": hex = "E" + hex; break;
-                case "1111": hex = "F" + hex; break;
-            }
+            hex = switch (part) {
+                case "0000" -> "0" + hex;
+                case "0001" -> "1" + hex;
+                case "0010" -> "2" + hex;
+                case "0011" -> "3" + hex;
+                case "0100" -> "4" + hex;
+                case "0101" -> "5" + hex;
+                case "0110" -> "6" + hex;
+                case "0111" -> "7" + hex;
+                case "1000" -> "8" + hex;
+                case "1001" -> "9" + hex;
+                case "1010" -> "A" + hex;
+                case "1011" -> "B" + hex;
+                case "1100" -> "C" + hex;
+                case "1101" -> "D" + hex;
+                case "1110" -> "E" + hex;
+                case "1111" -> "F" + hex;
+                default -> hex;
+            };
         }
         return hex;
     }
 
     // Gets decimal as an input and convert it to binary representation
-    public static String getBinary(String immediateString, int bitSize){
-       String binary = "";
-       double immediate = 0;
-       try {
-           immediate = Double.parseDouble(immediateString);
-       } catch (Exception e){
-           System.out.println("Given immediate value does not correct : " + immediateString);
-           System.exit(1);
-           return binary;
-       }
+    public static String getBinary(String immediateString, int bitSize) {
+        String binary = "";
+        double immediate = 0;
+        try {
+            immediate = Double.parseDouble(immediateString);
+        } catch (Exception e) {
+            System.out.println("Given immediate value does not correct : " + immediateString);
+            System.exit(1);
+            return binary;
+        }
         int power = bitSize - 2;
-        double upperLimit = Math.pow(2, bitSize) -1;
+        double upperLimit = Math.pow(2, bitSize) - 1;
         double lowerLimit = -1 * Math.pow(2, bitSize);
 
 
-
-       if(immediate < lowerLimit || immediate > upperLimit){
-           System.out.println("Given immediate value can not be represented in our system : " + immediateString);
-           System.exit(1);
-           return binary;
-       }
-
-       if(immediate >= 0){
-           binary += "0";
-           for(; power >= 0 ; power--){
-               if(immediate >= Math.pow(2, power)){
-                   immediate -= Math.pow(2, power);
-                   binary += "1";
-               }
-               else{
-                   binary += "0";
-               }
-           }
+        if (immediate < lowerLimit || immediate > upperLimit) {
+            System.out.println("Given immediate value can not be represented in our system : " + immediateString);
+            System.exit(1);
+            return binary;
         }
-       else{
-           binary += "1";
-           double positiveImmediate = -1*immediate - 1;
 
-           for(; power >= 0; power--){
-               if(positiveImmediate >= Math.pow(2, power)){
-                   positiveImmediate -= Math.pow(2, power);
-                   binary += "0";
-               }
-               else{
-                   binary += "1";
-               }
-           }
+        if (immediate >= 0) {
+            binary += "0";
+            for (; power >= 0; power--) {
+                if (immediate >= Math.pow(2, power)) {
+                    immediate -= Math.pow(2, power);
+                    binary += "1";
+                } else {
+                    binary += "0";
+                }
+            }
+        } else {
+            binary += "1";
+            double positiveImmediate = -1 * immediate - 1;
+
+            for (; power >= 0; power--) {
+                if (positiveImmediate >= Math.pow(2, power)) {
+                    positiveImmediate -= Math.pow(2, power);
+                    binary += "0";
+                } else {
+                    binary += "1";
+                }
+            }
         }
         return binary;
     }
 
 
-
-    public static String getBinary4Registers(String register){
+    public static String getBinary4Registers(String register) {
         String binary = "";
 
-        if(!(register.startsWith("R") || register.startsWith("r"))){
+        if (!(register.startsWith("R") || register.startsWith("r"))) {
             System.out.println("Given parameter is not register name !");
             System.exit(1);
             return binary;
@@ -372,24 +359,22 @@ public class Assembler {
 
         try {
             registerNumber = Double.parseDouble(register.substring(1));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Given register does not exist : " + register);
             System.exit(1);
             return binary;
         }
 
-        if( registerNumber <= 0 || registerNumber >= 16){
+        if (registerNumber <= 0 || registerNumber >= 16) {
             System.out.println("Given register does not exist : " + register);
             return binary;
         }
 
-        for(int power = 3; power >= 0 ; power--){
-            if(registerNumber >= Math.pow(2, power)){
+        for (int power = 3; power >= 0; power--) {
+            if (registerNumber >= Math.pow(2, power)) {
                 registerNumber -= Math.pow(2, power);
                 binary += "1";
-            }
-            else{
+            } else {
                 binary += "0";
             }
         }

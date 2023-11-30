@@ -1,0 +1,10 @@
+ADD R3 R7 R1
+
+ANDI R4 R2 5
+ANDI R4 R2 -5
+
+LD R8 172
+
+
+
+ST R9 100
