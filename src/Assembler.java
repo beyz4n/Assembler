@@ -115,7 +115,9 @@ public class Assembler {
         return isInteger;
     }
 
+    // This function converts the addi instruction to the hex format.
     public static String andi(String dest, String src1, String imm) {
+        // puts the given parameters' binary form in a string
         String instructionInBinary = "0100";
         src1 = getBinary4Registers(src1);
         imm = getBinary(imm, 6);
@@ -123,10 +125,13 @@ public class Assembler {
         instructionInBinary += dest;
         instructionInBinary += src1;
         instructionInBinary += imm;
+        // then converts it into a hex format and returns it
         return binary2Hex(instructionInBinary);
     }
 
+    // This function converts the nand instruction to the hex format.
     public static String nand(String dest, String src1, String src2) {
+        // puts the given parameters' binary form in a string
         String instructionInBinary = "0101";
         dest = getBinary4Registers(dest);
         src1 = getBinary4Registers(src1);
@@ -135,24 +140,31 @@ public class Assembler {
         instructionInBinary += src1;
         instructionInBinary += src2;
         instructionInBinary += "00";
+        // then converts it into a hex format and returns it
         return binary2Hex(instructionInBinary);
     }
 
+    // This function converts the ld instruction to the hex format.
     public static String ld(String dest, String addr) {
+        // puts the given parameters' binary form in a string
         String instructionInBinary = "0110";
         dest = getBinary4Registers(dest);
         addr = getBinary(addr, 10);
         instructionInBinary += dest;
         instructionInBinary += addr;
+        // then converts it into a hex format and returns it
         return binary2Hex(instructionInBinary);
     }
 
+    // This function converts the st instruction to the hex format.
     public static String st(String src, String addr) {
+        // puts the given parameters' binary form in a string
         String instructionInBinary = "0111";
         src = getBinary4Registers(src);
         addr = getBinary(addr, 10);
         instructionInBinary += src;
         instructionInBinary += addr;
+        // then converts it into a hex format and returns it
         return binary2Hex(instructionInBinary);
     }
 
@@ -270,10 +282,15 @@ public class Assembler {
 
     // Method to convert binary to hex
     public static String binary2Hex(String binary) {
+        // gets the number of digits
         double check = Math.ceil(binary.length() / 4.0);
         String part;
         String hex = "";
+        // for each hex digit
         for (int i = 0; i < check; i++) {
+            // accordingly to its value it assigns the corresponding hex value
+            // and appends it to a string
+            // get the last 4 each time
             if (binary.length() >= 4) {
                 part = binary.substring(binary.length() - 4);
                 binary = binary.substring(0, binary.length() - 4);
@@ -291,6 +308,7 @@ public class Assembler {
                         break;
                 }
             }
+            // mapping
             hex = switch (part) {
                 case "0000" -> "0" + hex;
                 case "0001" -> "1" + hex;
