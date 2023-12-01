@@ -168,7 +168,9 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    // This function converts the ja instruction to the hex format.
     public static String ja(String addr) {
+        // puts the given parameters' binary form in a string
         String instructionInBinary = "1011";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -176,7 +178,9 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    // This function converts the jb instruction to the hex format.
     public static String jb(String addr) {
+        // puts the given parameters' binary form in a string
         String instructionInBinary = "1100";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -184,7 +188,9 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    // This function converts the jae instruction to the hex format.
     public static String jae(String addr) {
+        // puts the given parameters' binary form in a string
         String instructionInBinary = "1101";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
@@ -192,7 +198,9 @@ public class Assembler {
         return binary2Hex(instructionInBinary);
     }
 
+    // This function converts the jbe instruction to the hex format.
     public static String jbe(String addr) {
+        // puts the given parameters' binary form in a string
         String instructionInBinary = "1110";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
