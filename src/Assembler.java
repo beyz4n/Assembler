@@ -353,8 +353,8 @@ public class Assembler {
             return binary;
         }
         int power = bitSize - 2;
-        double upperLimit = Math.pow(2, bitSize) - 1; // Maximum value of the number that can be given to the function
-        double lowerLimit = -1 * Math.pow(2, bitSize); // Maximum value of the number that can be given to the function
+        double upperLimit = Math.pow(2, bitSize - 2) - 1; // Maximum value of the number that can be given to the function
+        double lowerLimit = -1 * Math.pow(2, bitSize - 2); // Maximum value of the number that can be given to the function
 
 
         // Check if the given number exceed the range
@@ -416,7 +416,7 @@ public class Assembler {
         }
 
         // Check if given register number between 0 and 16
-        if (registerNumber <= 0 || registerNumber >= 15) {
+        if (registerNumber < 0 || registerNumber > 15) {
             System.out.println("Given register does not exist : " + register);
             return binary;
         }
