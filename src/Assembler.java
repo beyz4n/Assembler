@@ -226,7 +226,7 @@ public class Assembler {
         String instructionInBinary = "0001";
         dest = getBinary4Registers(dest);
         src = getBinary4Registers(src);
-        imm = getBinary(imm, 10);
+        imm = getBinary(imm, 6);
         instructionInBinary += dest;
         instructionInBinary += src;
         instructionInBinary += imm;
