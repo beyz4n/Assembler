@@ -118,7 +118,7 @@ public class Assembler {
     // This function converts the addi instruction to the hex format.
     public static String andi(String dest, String src1, String imm) {
         // puts the given parameters' binary form in a string
-        String instructionInBinary = "0100";
+        String instructionInBinary = "0101";
         src1 = getBinary4Registers(src1);
         imm = getBinary(imm, 6);
         dest = getBinary4Registers(dest);
@@ -132,7 +132,7 @@ public class Assembler {
     // This function converts the nand instruction to the hex format.
     public static String nand(String dest, String src1, String src2) {
         // puts the given parameters' binary form in a string
-        String instructionInBinary = "0101";
+        String instructionInBinary = "0110";
         dest = getBinary4Registers(dest);
         src1 = getBinary4Registers(src1);
         src2 = getBinary4Registers(src2);
@@ -147,7 +147,7 @@ public class Assembler {
     // This function converts the ld instruction to the hex format.
     public static String ld(String dest, String addr) {
         // puts the given parameters' binary form in a string
-        String instructionInBinary = "0110";
+        String instructionInBinary = "1000";
         dest = getBinary4Registers(dest);
         addr = getBinary(addr, 10);
         instructionInBinary += dest;
@@ -159,7 +159,7 @@ public class Assembler {
     // This function converts the st instruction to the hex format.
     public static String st(String src, String addr) {
         // puts the given parameters' binary form in a string
-        String instructionInBinary = "0111";
+        String instructionInBinary = "1001";
         src = getBinary4Registers(src);
         addr = getBinary(addr, 10);
         instructionInBinary += src;
@@ -248,7 +248,7 @@ public class Assembler {
 
     // Method for and instruction
     public static String and(String dest, String src1, String src2) {
-        String instructionInBinary = "0011";
+        String instructionInBinary = "0100";
         dest = getBinary4Registers(dest);
         src1 = getBinary4Registers(src1);
         src2 = getBinary4Registers(src2);
@@ -261,7 +261,7 @@ public class Assembler {
 
     //cmp method converts desired instruction to binary which contains specific opcode and registers, after that converts it to hexadecimal
     public static String cmp(String op1, String op2) {
-        String instructionInBinary = "1000";
+        String instructionInBinary = "0011";
         op1 = getBinary4Registers(op1);
         op2 = getBinary4Registers(op2);
         instructionInBinary += op1;
@@ -272,7 +272,7 @@ public class Assembler {
 
     //jump method converts desired instruction to binary which contains specific opcode and address, after that converts it to hexadecimal
     public static String jump(String addr) {
-        String instructionInBinary = "1001";
+        String instructionInBinary = "1111";
         addr = getBinary(addr, 10);
         instructionInBinary += addr;
         instructionInBinary += "0000";
